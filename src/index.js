@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
+import { createLogger } from 'redux-logger'
 import './index.css';
 
 // action types
@@ -85,7 +86,13 @@ const rootReducer = combineReducers({
   filterState: filterReducer,
 });
 
-const store = createStore(rootReducer);
+const logger = createLogger();
+
+const store = createStore(
+  rootReducer,
+  undefined,
+  applyMiddleware(logger)
+);
 
 // components
 
