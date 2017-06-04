@@ -7,6 +7,14 @@ import { schema, normalize } from 'normalizr';
 import uuid from 'uuid/v4';
 import './index.css';
 
+// filters
+
+const VISIBILITY_FILTERS = {
+  SHOW_COMPLETED: item => item.completed,
+  SHOW_INCOMPLETED: item => !item.completed,
+  SHOW_ALL: item => true,
+};
+
 // schemas
 
 const todoSchema = new schema.Entity('todo');
@@ -97,7 +105,10 @@ function doSetFilter(filter) {
 // selectors
 
 function getTodosAsIds(state) {
-  return state.todoState.ids;
+  return state.todoState.ids
+    .map(id => state.todoState.entities[id])
+    .filter(VISIBILITY_FILTERS[state.filterState])
+    .map(todo => todo.id);
 }
 
 function getTodo(state, todoId) {
@@ -124,8 +135,29 @@ const store = createStore(
 function TodoApp() {
   return (
     <div>
+      <ConnectedFilter />
       <ConnectedTodoCreate />
       <ConnectedTodoList />
+    </div>
+  );
+}
+
+function Filter({ onSetFilter }) {
+  return (
+    <div>
+      Show
+      <button
+        type="text"
+        onClick={() => onSetFilter('SHOW_ALL')}>
+        All</button>
+      <button
+        type="text"
+        onClick={() => onSetFilter('SHOW_COMPLETED')}>
+        Completed</button>
+      <button
+        type="text"
+        onClick={() => onSetFilter('SHOW_INCOMPLETED')}>
+        Incompleted</button>
     </div>
   );
 }
@@ -221,9 +253,16 @@ function mapDispatchToPropsCreate(dispatch) {
   };
 }
 
+function mapDispatchToPropsFilter(dispatch) {
+  return {
+    onSetFilter: filterType => dispatch(doSetFilter(filterType)),
+  };
+}
+
 const ConnectedTodoList = connect(mapStateToPropsList)(TodoList);
 const ConnectedTodoItem = connect(mapStateToPropsItem, mapDispatchToPropsItem)(TodoItem);
 const ConnectedTodoCreate = connect(null, mapDispatchToPropsCreate)(TodoCreate);
+const ConnectedFilter = connect(null, mapDispatchToPropsFilter)(Filter);
 
 ReactDOM.render(
   <Provider store={store}>
