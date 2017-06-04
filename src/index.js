@@ -31,14 +31,14 @@ function todoReducer(state = todos, action) {
 }
 
 function applyAddTodo(state, action) {
-  const todo = Object.assign({}, action.todo, { completed: false });
-  return state.concat(todo);
+  const todo = { ...action.todo, completed: false };
+  return [ ...state, todo ];
 }
 
 function applyToggleTodo(state, action) {
   return state.map(todo =>
     todo.id === action.todo.id
-      ? Object.assign({}, todo, { completed: !todo.completed })
+      ? { ...todo, completed: !todo.completed }
       : todo
   );
 }
