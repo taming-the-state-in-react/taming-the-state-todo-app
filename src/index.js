@@ -28,8 +28,27 @@ const FILTER_SET = 'FILTER_SET';
 // reducers
 
 const todos = [
-  { id: uuid(), name: 'learn redux' },
-  { id: uuid(), name: 'learn mobx' },
+  { id: uuid(), name: 'Hands On: Snake with Local State' },
+  { id: uuid(), name: 'Challenge: Snake with Higher Order Components' },
+  { id: uuid(), name: 'Hands On: Redux Standalone with advanced Actions' },
+  { id: uuid(), name: 'Hands On: Redux Standalone with advanced Reducers' },
+  { id: uuid(), name: 'Hands On: Bootstrap App with Redux' },
+  { id: uuid(), name: 'Hands On: Naive Todo with React and Redux' },
+  { id: uuid(), name: 'Hands On: Sophisticated Todo with React and Redux' },
+  { id: uuid(), name: 'Hands On: Connecting State Everywhere' },
+  { id: uuid(), name: 'Challenge: Snake with React and Redux' },
+  { id: uuid(), name: 'Hands On: Todo with advanced Redux' },
+  { id: uuid(), name: 'Hands On: Todo with more Features' },
+  { id: uuid(), name: 'Challenge: Snake with Redux' },
+  { id: uuid(), name: 'Hands On: Todo with Notifications' },
+  { id: uuid(), name: 'Challenge: Snake with Redux and Async Actions' },
+  { id: uuid(), name: 'Hands On: Hacker News with Redux' },
+  { id: uuid(), name: 'Challenge: Hacker News with beyond Redux' },
+  { id: uuid(), name: 'Challenge: Hacker News with beyond Redux' },
+  { id: uuid(), name: 'Hands On: Snake with MobX' },
+  { id: uuid(), name: 'Hands On: Todo App with MobX' },
+  { id: uuid(), name: 'Challenge: Hacker News App with MobX' },
+  { id: uuid(), name: 'Challenge: Consuming a GrapQL API with Relay' },
 ];
 
 const normalizedTodos = normalize(todos, [todoSchema]);
