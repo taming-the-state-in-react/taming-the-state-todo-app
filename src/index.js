@@ -4,6 +4,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
 import { createLogger } from 'redux-logger';
 import { schema, normalize } from 'normalizr';
+import uuid from 'uuid/v4';
 import './index.css';
 
 // schemas
@@ -19,8 +20,8 @@ const FILTER_SET = 'FILTER_SET';
 // reducers
 
 const todos = [
-  { id: '0', name: 'learn redux' },
-  { id: '1', name: 'learn mobx' },
+  { id: uuid(), name: 'learn redux' },
+  { id: uuid(), name: 'learn mobx' },
 ];
 
 const normalizedTodos = normalize(todos, [todoSchema]);
@@ -121,7 +122,51 @@ const store = createStore(
 // components
 
 function TodoApp() {
-  return <ConnectedTodoList />;
+  return (
+    <div>
+      <ConnectedTodoCreate />
+      <ConnectedTodoList />
+    </div>
+  );
+}
+
+class TodoCreate extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: '',
+    };
+
+    this.onCreateTodo = this.onCreateTodo.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
+  }
+
+  onChangeName(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  onCreateTodo(event) {
+    this.props.onAddTodo(this.state.value);
+    this.setState({ value: '' });
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.onCreateTodo}>
+          <input
+            type="text"
+            placeholder="Add Todo..."
+            value={this.state.value}
+            onChange={this.onChangeName}
+          />
+          <button type="submit">Add</button>
+        </form>
+      </div>
+    );
+  }
 }
 
 function TodoList({ todosAsIds }) {
@@ -170,8 +215,15 @@ function mapDispatchToPropsItem(dispatch) {
   };
 }
 
+function mapDispatchToPropsCreate(dispatch) {
+  return {
+    onAddTodo: name => dispatch(doAddTodo(uuid(), name)),
+  };
+}
+
 const ConnectedTodoList = connect(mapStateToPropsList)(TodoList);
 const ConnectedTodoItem = connect(mapStateToPropsItem, mapDispatchToPropsItem)(TodoItem);
+const ConnectedTodoCreate = connect(null, mapDispatchToPropsCreate)(TodoCreate);
 
 ReactDOM.render(
   <Provider store={store}>
