@@ -89,7 +89,6 @@ const store = createStore(rootReducer);
 // components
 
 function TodoApp({ todos, onToggleTodo }) {
-  console.log(todos);
   return <TodoList
     todos={todos}
     onToggleTodo={onToggleTodo}
