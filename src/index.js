@@ -25,6 +25,7 @@ const todoSchema = new schema.Entity('todo');
 const TODO_ADD = 'TODO_ADD';
 const TODO_TOGGLE = 'TODO_TOGGLE';
 const FILTER_SET = 'FILTER_SET';
+const NOTIFICATION_HIDE = 'NOTIFICATION_HIDE';
 
 // reducers
 
@@ -104,6 +105,9 @@ function notificationReducer(state = {}, action) {
     case TODO_ADD : {
       return applySetNotifyAboutAddTodo(state, action);
     }
+    case NOTIFICATION_HIDE : {
+      return applyRemoveNotification(state, action);
+    }
     default : return state;
   }
 }
@@ -113,7 +117,32 @@ function applySetNotifyAboutAddTodo(state, action) {
   return { ...state, [id]: 'Todo Created: ' + name  };
 }
 
+function applyRemoveNotification(state, action) {
+  const {
+    [action.id]: notificationToRemove,
+    ...restNotifications,
+  } = state;
+  return restNotifications;
+}
+
 // action creators
+
+function doAddTodoWithNotification(id, name) {
+  return function (dispatch) {
+    dispatch(doAddTodo(id, name));
+
+    setTimeout(function () {
+      dispatch(doHideNotification(id));
+    }, 5000);
+  }
+}
+
+function doHideNotification(id) {
+  return {
+    type: NOTIFICATION_HIDE,
+    id
+  };
+}
 
 function doAddTodo(id, name) {
   return {
@@ -301,7 +330,7 @@ function mapDispatchToPropsItem(dispatch) {
 
 function mapDispatchToPropsCreate(dispatch) {
   return {
-    onAddTodo: name => dispatch(doAddTodo(uuid(), name)),
+    onAddTodo: name => dispatch(doAddTodoWithNotification(uuid(), name)),
   };
 }
 
