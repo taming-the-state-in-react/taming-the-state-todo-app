@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
 import { createLogger } from 'redux-logger';
+import thunk from 'redux-thunk';
 import { schema, normalize } from 'normalizr';
 import uuid from 'uuid/v4';
 import './index.css';
@@ -98,6 +99,20 @@ function applySetFilter(state, action) {
   return action.filter;
 }
 
+function notificationReducer(state = {}, action) {
+  switch(action.type) {
+    case TODO_ADD : {
+      return applySetNotifyAboutAddTodo(state, action);
+    }
+    default : return state;
+  }
+}
+
+function applySetNotifyAboutAddTodo(state, action) {
+  const { name, id } = action.todo;
+  return { ...state, [id]: 'Todo Created: ' + name  };
+}
+
 // action creators
 
 function doAddTodo(id, name) {
@@ -134,11 +149,20 @@ function getTodo(state, todoId) {
   return state.todoState.entities[todoId];
 }
 
+function getNotifications(state) {
+  return getArrayOfObject(state.notificationState);
+}
+
+function getArrayOfObject(object) {
+  return Object.keys(object).map(key => object[key]);
+}
+
 // store
 
 const rootReducer = combineReducers({
   todoState: todoReducer,
   filterState: filterReducer,
+  notificationState: notificationReducer,
 });
 
 const logger = createLogger();
@@ -146,7 +170,7 @@ const logger = createLogger();
 const store = createStore(
   rootReducer,
   undefined,
-  applyMiddleware(logger)
+  applyMiddleware(thunk, logger)
 );
 
 // components
@@ -157,6 +181,15 @@ function TodoApp() {
       <ConnectedFilter />
       <ConnectedTodoCreate />
       <ConnectedTodoList />
+      <ConnectedNotifications />
+    </div>
+  );
+}
+
+function Notifications({ notifications }) {
+  return (
+    <div>
+      {notifications.map(note => <div key={note}>{note}</div>)}
     </div>
   );
 }
@@ -278,10 +311,17 @@ function mapDispatchToPropsFilter(dispatch) {
   };
 }
 
+function mapStateToPropsNotifications(state, props) {
+  return {
+     notifications: getNotifications(state),
+  };
+}
+
 const ConnectedTodoList = connect(mapStateToPropsList)(TodoList);
 const ConnectedTodoItem = connect(mapStateToPropsItem, mapDispatchToPropsItem)(TodoItem);
 const ConnectedTodoCreate = connect(null, mapDispatchToPropsCreate)(TodoCreate);
 const ConnectedFilter = connect(null, mapDispatchToPropsFilter)(Filter);
+const ConnectedNotifications = connect(mapStateToPropsNotifications)(Notifications);
 
 ReactDOM.render(
   <Provider store={store}>
