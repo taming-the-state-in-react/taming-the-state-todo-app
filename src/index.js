@@ -89,20 +89,16 @@ const store = createStore(rootReducer);
 
 // view layer
 
-function TodoApp({ todos, onToggleTodo }) {
-  return <TodoList
-    todos={todos}
-    onToggleTodo={onToggleTodo}
-  />;
+function TodoApp() {
+  return <ConnectedTodoList />;
 }
 
-function TodoList({ todos, onToggleTodo }) {
+function TodoList({ todos }) {
   return (
     <div>
-      {todos.map(todo => <TodoItem
+      {todos.map(todo => <ConnectedTodoItem
         key={todo.id}
         todo={todo}
-        onToggleTodo={onToggleTodo}
       />)}
     </div>
   );
@@ -135,11 +131,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const ConnectedTodoApp = connect(mapStateToProps, mapDispatchToProps)(TodoApp);
+const ConnectedTodoList = connect(mapStateToProps)(TodoList);
+const ConnectedTodoItem = connect(null, mapDispatchToProps)(TodoItem);
 
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedTodoApp />
+    <TodoApp />
   </Provider>,
   document.getElementById('root')
 );
