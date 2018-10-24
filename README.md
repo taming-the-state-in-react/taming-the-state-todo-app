@@ -1,6 +1,6 @@
 # React Redux Todo Application
 
-[![Slack](https://slack-the-road-to-learn-react.wieruch.com/badge.svg)](https://slack-the-road-to-learn-react.wieruch.com/)
+[![Build Status](https://travis-ci.org/taming-the-state-in-react/taming-the-state-todo-app.svg?branch=master)](https://travis-ci.org/taming-the-state-in-react/taming-the-state-todo-app) [![Slack](https://slack-the-road-to-learn-react.wieruch.com/badge.svg)](https://slack-the-road-to-learn-react.wieruch.com/)
 
 * Found in [Taming the State in React](https://roadtoreact.com/course-details?courseId=TAMING_THE_STATE)
 
@@ -12,7 +12,7 @@
 
 ## Installation
 
-* `git clone git@github.com:rwieruch/taming-the-state-todo-app.git`
+* `git clone git@github.com:taming-the-state-in-react/taming-the-state-todo-app.git`
 * `cd taming-the-state-todo-app`
 * `npm install`
 * `npm start`
