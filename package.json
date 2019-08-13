@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "3.1.0"
+    "react-scripts": "3.1.1"
   },
   "dependencies": {
     "normalizr": "^3.3.0",
